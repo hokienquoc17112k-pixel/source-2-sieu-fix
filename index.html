@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NemoSnow | My Profile </title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #060610;
+      --card: #0d0d20;
+      --border: rgba(120,100,255,0.18);
+      --accent: #7b5fff;
+      --accent2: #ff5faa;
+      --accent3: #5fffd4;
+      --text: #e8e8ff;
+      --muted: #7878aa;
+      --glow: 0 0 40px rgba(123,95,255,0.35);
+
+      /* Status colors */
+      --status-online:  #23d18b;
+      --status-idle:    #f5a623;
+      --status-dnd:     #f04747;
+      --status-offline: #747f8d;
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 20% 20%, rgba(123,95,255,0.13) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 80%, rgba(255,95,170,0.10) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 60% 10%, rgba(95,255,212,0.07) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+      animation: bgPulse 8s ease-in-out infinite alternate;
+    }
+    @keyframes bgPulse { from { opacity: 0.7; } to { opacity: 1; } }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(rgba(123,95,255,0.12) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 60px 24px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
+
+    /* ── Avatar ── */
+    .avatar-wrap {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      animation: fadeDown 0.7s ease both;
+    }
+    .avatar-ring {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: conic-gradient(var(--accent), var(--accent2), var(--accent3), var(--accent));
+      animation: spin 4s linear infinite;
+    }
+    .avatar-ring::after {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: var(--bg);
+    }
+    .avatar {
+      position: relative;
+      z-index: 2;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1a1a35 0%, #2a1a45 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-size: 42px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -2px;
+      user-select: none;
+      overflow: hidden;
+    }
+    .avatar img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    /* Avatar status badge */
+    .avatar-status-badge {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      z-index: 10;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 3px solid var(--bg);
+      background: var(--status-offline);
+      transition: background 0.4s ease;
+    }
+    .avatar-status-badge.online  { background: var(--status-online); }
+    .avatar-status-badge.idle    { background: var(--status-idle); }
+    .avatar-status-badge.dnd     { background: var(--status-dnd); }
+    .avatar-status-badge.offline { background: var(--status-offline); }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Profile ── */
+    .profile {
+      text-align: center;
+      animation: fadeDown 0.8s 0.1s ease both;
+    }
+    .name {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, var(--text) 0%, var(--accent) 60%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .handle {
+      margin-top: 4px;
+      font-size: 0.95rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* ── Discord Status Badge ── */
+    .status {
+      margin-top: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(123,95,255,0.1);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+      color: var(--status-offline);
+      transition: color 0.4s ease, border-color 0.4s ease;
+    }
+    .status.online  { color: var(--status-online);  border-color: rgba(35,209,139,0.4); }
+    .status.idle    { color: var(--status-idle);     border-color: rgba(245,166,35,0.4); }
+    .status.dnd     { color: var(--status-dnd);      border-color: rgba(240,71,71,0.4); }
+    .status.offline { color: var(--status-offline);  border-color: rgba(116,127,141,0.4); }
+
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+    .status.online .status-dot,
+    .status.idle .status-dot   { animation: blink 1.4s ease-in-out infinite; }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.3; }
+    }
+
+    /* Status text map */
+    #statusText { transition: opacity 0.3s; }
+
+    /* Custom status / activity */
+    .custom-status {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: none;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+    }
+    .custom-status.show { display: flex; }
+    .custom-status-emoji { font-size: 1rem; }
+
+    /* ── Tags ── */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      animation: fadeDown 0.8s 0.2s ease both;
+    }
+    .tag {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 5px 14px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Social Links ── */
+    .links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      width: 100%;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+    .link-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px 20px;
+      border-radius: 16px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .link-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .link-btn:hover {
+      transform: translateY(-4px) scale(1.02);
+      border-color: var(--btn-color, var(--accent));
+      box-shadow: 0 10px 40px rgba(0,191,255,0.4), 0 0 15px var(--btn-color, var(--accent));
+    }
+    .link-btn:hover::before { opacity: 0.07; }
+    .link-btn:active { transform: translateY(0); }
+    .link-icon {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      background: rgba(255,255,255,0.06);
+    }
+    .link-icon svg { width: 20px; height: 20px; }
+    .link-label { font-family: 'Syne', sans-serif; font-size: 0.92rem; font-weight: 700; }
+    .link-sub   { font-size: 0.75rem; color: var(--muted); margin-top: 1px; }
+
+    .btn-roblox  { --btn-color: #e53c2e; }
+    .btn-discord { --btn-color: #5865f2; }
+    .btn-fb      { --btn-color: #1877f2; }
+    .btn-yt      { --btn-color: #ff0000; }
+    .btn-roblox  .link-icon { background: rgba(229,60,46,0.15); }
+    .btn-discord .link-icon { background: rgba(88,101,242,0.15); }
+    .btn-fb      .link-icon { background: rgba(24,119,242,0.15); }
+    .btn-yt      .link-icon { background: rgba(255,0,0,0.15); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Spotify Card ── */
+    .spotify-wrap {
+      width: 100%;
+      animation: fadeUp 0.8s 0.38s ease both;
+      display: none;
+    }
+    .spotify-wrap.show { display: block; }
+    .spotify-card {
+      background: var(--card);
+      border: 1px solid rgba(30,215,96,0.3);
+      border-radius: 20px;
+      padding: 16px 20px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .spotify-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #1ed760, #17a84a, #1ed760);
+      background-size: 200% 100%;
+      animation: spotifyBar 2s linear infinite;
+    }
+    @keyframes spotifyBar {
+      from { background-position: 0% 0%; }
+      to   { background-position: 200% 0%; }
+    }
+
+    .spotify-art {
+      width: 52px; height: 52px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      background: #1a2a1a;
+      overflow: hidden;
+      position: relative;
+    }
+    .spotify-art img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .spotify-art-placeholder {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #1a2a1a, #0a1a0a);
+    }
+    .spotify-art-placeholder svg { width: 24px; height: 24px; color: #1ed760; }
+
+    .spotify-info { flex: 1; min-width: 0; }
+    .spotify-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      color: #1ed760;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .spotify-label svg { width: 13px; height: 13px; }
+    .spotify-song {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: var(--text);
+    }
+    .spotify-artist {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Spotify EQ bars */
+    .spotify-eq {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+    .spotify-eq span {
+      width: 3px;
+      border-radius: 2px;
+      background: #1ed760;
+      animation: eqAnim 0.6s ease-in-out infinite alternate;
+    }
+    .spotify-eq span:nth-child(1) { animation-delay: 0s;    height: 55%; }
+    .spotify-eq span:nth-child(2) { animation-delay: 0.15s; height: 100%; }
+    .spotify-eq span:nth-child(3) { animation-delay: 0.05s; height: 40%; }
+    .spotify-eq span:nth-child(4) { animation-delay: 0.20s; height: 75%; }
+    @keyframes eqAnim {
+      from { transform: scaleY(0.3); }
+      to   { transform: scaleY(1); }
+    }
+
+    /* Spotify progress bar */
+    .spotify-progress-wrap {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .spotify-time { font-size: 0.68rem; color: var(--muted); width: 28px; }
+    .spotify-time.end { text-align: right; }
+    .spotify-bar {
+      flex: 1;
+      height: 3px;
+      border-radius: 99px;
+      background: rgba(255,255,255,0.1);
+      overflow: hidden;
+    }
+    .spotify-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: #1ed760;
+      transition: width 1s linear;
+      width: 0%;
+    }
+
+    /* ── Music Player ── */
+    .player-wrap {
+      width: 100%;
+      animation: fadeUp 0.8s 0.45s ease both;
+    }
+    .player {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .player::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+    }
+    .player-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+    .album-art {
+      width: 52px; height: 52px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #2a1a45, #1a2a45);
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .album-art svg { width: 24px; height: 24px; color: var(--accent); }
+    .disc-anim {
+      position: absolute;
+      inset: 0;
+      border-radius: 10px;
+      background: conic-gradient(rgba(123,95,255,0.3), rgba(255,95,170,0.2), rgba(95,255,212,0.2), rgba(123,95,255,0.3));
+      animation: spinDisc 3s linear infinite;
+    }
+    @keyframes spinDisc { to { transform: rotate(360deg); } }
+    .disc-anim.paused { animation-play-state: paused; }
+
+    .track-info { flex: 1; min-width: 0; }
+    .track-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: 0.95rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .track-artist { font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+
+    .seek-wrap {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 14px;
+    }
+    .time { font-size: 0.72rem; color: var(--muted); width: 32px; }
+    .time.end { text-align: right; }
+    .seek {
+      flex: 1;
+      -webkit-appearance: none; appearance: none;
+      height: 4px; border-radius: 99px;
+      background: rgba(255,255,255,0.1);
+      outline: none; cursor: pointer;
+    }
+    .seek::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 13px; height: 13px; border-radius: 50%;
+      background: var(--accent); cursor: pointer;
+      box-shadow: 0 0 8px var(--accent);
+      transition: transform 0.15s;
+    }
+    .seek::-webkit-slider-thumb:hover { transform: scale(1.3); }
+
+    .controls {
+      display: flex; align-items: center;
+      justify-content: center; gap: 18px;
+    }
+    .ctrl-btn {
+      background: none; border: none;
+      color: var(--muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      padding: 6px; border-radius: 50%;
+      transition: color 0.2s, background 0.2s, transform 0.15s;
+    }
+    .ctrl-btn:hover { color: var(--text); background: rgba(255,255,255,0.07); }
+    .ctrl-btn:active { transform: scale(0.9); }
+    .ctrl-btn svg { width: 20px; height: 20px; display: block; }
+    .play-btn {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: white;
+      box-shadow: 0 0 20px rgba(123,95,255,0.5);
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+    .play-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 30px rgba(123,95,255,0.7);
+      background: rgba(255,255,255,0.07); color: var(--text);
+    }
+    .play-btn svg { width: 22px; height: 22px; }
+
+    .eq {
+      display: flex; align-items: flex-end; gap: 3px; height: 18px;
+    }
+    .eq-bar {
+      width: 3px; border-radius: 2px;
+      background: var(--accent);
+      animation: eqAnim 0.6s ease-in-out infinite alternate;
+    }
+    .eq-bar:nth-child(1) { animation-delay: 0s;    height: 60%; }
+    .eq-bar:nth-child(2) { animation-delay: 0.1s;  height: 100%; }
+    .eq-bar:nth-child(3) { animation-delay: 0.2s;  height: 40%; }
+    .eq-bar:nth-child(4) { animation-delay: 0.05s; height: 80%; }
+    .eq-bar:nth-child(5) { animation-delay: 0.15s; height: 55%; }
+    .eq-bar.paused { animation-play-state: paused; }
+
+    .volume-wrap {
+      display: flex; align-items: center; gap: 10px;
+      margin-top: 14px; padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .vol-icon {
+      color: var(--muted); cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center;
+      transition: color 0.2s;
+      background: none; border: none; padding: 2px;
+    }
+    .vol-icon:hover { color: var(--text); }
+    .vol-icon svg { width: 18px; height: 18px; display: block; }
+    .vol-slider {
+      flex: 1;
+      -webkit-appearance: none; appearance: none;
+      height: 4px; border-radius: 99px;
+      background: rgba(255,255,255,0.1);
+      outline: none; cursor: pointer;
+    }
+    .vol-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 13px; height: 13px; border-radius: 50%;
+      background: var(--accent2); cursor: pointer;
+      box-shadow: 0 0 8px var(--accent2);
+      transition: transform 0.15s;
+    }
+    .vol-slider::-webkit-slider-thumb:hover { transform: scale(1.3); }
+    .vol-pct { font-size: 0.72rem; color: var(--muted); width: 34px; text-align: right; }
+
+    /* ── Playlist ── */
+    .playlist-panel {
+      width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      animation: fadeUp 0.8s 0.5s ease both;
+    }
+    .playlist-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer; user-select: none;
+      transition: background 0.2s;
+    }
+    .playlist-header:hover { background: rgba(255,255,255,0.03); }
+    .playlist-header-left {
+      display: flex; align-items: center; gap: 10px;
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem;
+    }
+    .playlist-header-left svg { width: 18px; height: 18px; color: var(--accent); }
+    .playlist-count {
+      font-size: 0.75rem; color: var(--muted);
+      background: rgba(123,95,255,0.12);
+      border: 1px solid var(--border);
+      border-radius: 99px; padding: 2px 9px;
+      font-family: 'DM Sans', sans-serif; font-weight: 400;
+    }
+    .playlist-chevron { color: var(--muted); transition: transform 0.3s; }
+    .playlist-chevron.open { transform: rotate(180deg); }
+    .playlist-chevron svg { width: 18px; height: 18px; display: block; }
+    .playlist-body {
+      display: none; padding: 16px 20px 20px;
+      flex-direction: column; gap: 14px;
+    }
+    .playlist-body.open { display: flex; }
+    .add-track-form { display: flex; flex-direction: column; gap: 8px; }
+    .add-track-row { display: flex; gap: 8px; }
+    .pl-input {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 9px 13px;
+      color: var(--text); font-size: 0.83rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none; transition: border-color 0.2s; min-width: 0;
+    }
+    .pl-input:focus { border-color: var(--accent); }
+    .pl-input::placeholder { color: var(--muted); }
+    .pl-add-btn {
+      padding: 9px 16px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none; color: #fff;
+      font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.83rem;
+      cursor: pointer; white-space: nowrap;
+      transition: opacity 0.2s, transform 0.15s; flex-shrink: 0;
+    }
+    .pl-add-btn:hover { opacity: 0.85; transform: scale(1.03); }
+    .track-list {
+      display: flex; flex-direction: column; gap: 6px;
+      max-height: 220px; overflow-y: auto;
+      scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+    }
+    .track-list:empty::after {
+      content: 'Chưa có bài nào. Thêm link nhạc bên trên nhé!';
+      display: block; text-align: center;
+      color: var(--muted); font-size: 0.8rem; padding: 10px 0;
+    }
+    .track-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 10px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid transparent;
+      cursor: pointer; transition: background 0.2s, border-color 0.2s;
+    }
+    .track-item:hover { background: rgba(255,255,255,0.07); }
+    .track-item.active {
+      background: rgba(123,95,255,0.12);
+      border-color: rgba(123,95,255,0.3);
+    }
+    .track-num {
+      font-size: 0.75rem; color: var(--muted);
+      width: 18px; text-align: center; flex-shrink: 0;
+    }
+    .track-item.active .track-num { color: var(--accent); }
+    .track-item-name {
+      flex: 1; font-size: 0.85rem;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .track-del {
+      background: none; border: none; color: var(--muted);
+      cursor: pointer; padding: 2px; border-radius: 4px;
+      display: flex; align-items: center;
+      transition: color 0.2s, background 0.2s; flex-shrink: 0;
+    }
+    .track-del:hover { color: var(--accent2); background: rgba(255,95,170,0.1); }
+    .track-del svg { width: 15px; height: 15px; display: block; }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center; font-size: 0.78rem; color: var(--muted);
+      animation: fadeUp 0.8s 0.6s ease both;
+    }
+
+    /* ── Lanyard loading ── */
+    .lanyard-loading {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 0.8rem; color: var(--muted);
+    }
+    .lanyard-loading::before {
+      content: '';
+      width: 8px; height: 8px; border-radius: 50%;
+      border: 2px solid var(--muted);
+      border-top-color: var(--accent);
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Avatar -->
+  <div class="avatar-wrap">
+    <div class="avatar-ring"></div>
+    <div class="avatar" id="avatarEl">
+      <img id="avatarImg"
+        src="https://cdn.discordapp.com/attachments/1378041828984754232/1483443487339708508/Screenshot_20260317_193238_TikTok.jpg?ex=69be9068&is=69bd3ee8&hm=8b2dd505e2a1fa0a98b44346c5b80d0bcbd132e3e0ce894f304030f5a3d3b0c9&"
+        alt="avatar"
+        onerror="this.style.display='none';document.getElementById('avatarInitial').style.display=''"/>
+      <span id="avatarInitial" style="display:none">N</span>
+    </div>
+    <!-- Status badge on avatar -->
+    <div class="avatar-status-badge offline" id="avatarBadge"></div>
+  </div>
+
+  <!-- Profile -->
+  <div class="profile">
+    <div class="name">NemoSnow</div>
+    <div class="handle">@Quocdepzaii8</div>
+    <div class="status offline" id="statusBadge">
+      <span class="status-dot"></span>
+      <span id="statusText"><span class="lanyard-loading">Đang tải...</span></span>
+    </div>
+    <!-- Custom status / activity -->
+    <div class="custom-status" id="customStatus">
+      <span class="custom-status-emoji" id="customEmoji"></span>
+      <span id="customText"></span>
+    </div>
+  </div>
+
+  <!-- Tags -->
+  <div class="tags">
+    <span class="tag">🎮 Gamer</span>
+    <span class="tag">💻 Optimize</span>
+    <span class="tag">💻 PC Enthusiast</span>
+    <span class="tag">💻 Developer</span>
+  </div>
+
+  <!-- Social Links -->
+  <div class="links">
+    <a href="https://www.roblox.com/vi/users/5573135844/profile" target="_blank" class="link-btn btn-roblox">
+      <div class="link-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="color:#e53c2e">
+          <path d="M5.24 0L0 18.9l13.56 4.6L19 4.6zm9.98 13.08l-4.17-1.42.95-3.64 4.17 1.42z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="link-label">Roblox</div>
+        <div class="link-sub">Quocdepzaii8</div>
+      </div>
+    </a>
+
+    <a href="https://discord.com/users/798480569943719936" target="_blank" class="link-btn btn-discord">
+      <div class="link-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="color:#5865f2">
+          <path d="M20.317 4.37a19.79 19.79 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.74 19.74 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.1 13.1 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.3 12.3 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.84 19.84 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="link-label">Discord</div>
+        <div class="link-sub">D_Obii</div>
+      </div>
+    </a>
+
+    <a href="https://www.facebook.com/phanhdiahuong?locale=vi_VN" target="_blank" class="link-btn btn-fb">
+      <div class="link-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="color:#1877f2">
+          <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="link-label">Facebook</div>
+        <div class="link-sub">Hồ Kiến Quốc</div>
+      </div>
+    </a>
+
+    <a href="https://www.youtube.com/" target="_blank" class="link-btn btn-yt">
+      <div class="link-icon">
+        <svg viewBox="0 0 24 24" fill="currentColor" style="color:#ff0000">
+          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+        </svg>
+      </div>
+      <div>
+        <div class="link-label">YouTube</div>
+        <div class="link-sub">No Content</div>
+      </div>
+    </a>
+  </div>
+
+  <!-- Spotify Card (hiển thị khi đang nghe) -->
+  <div class="spotify-wrap" id="spotifyWrap">
+    <div class="spotify-card">
+      <div class="spotify-art" id="spotifyArt">
+        <div class="spotify-art-placeholder">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+          </svg>
+        </div>
+      </div>
+      <div class="spotify-info">
+        <div class="spotify-label">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
+          </svg>
+          ĐANG NGHE SPOTIFY
+        </div>
+        <div class="spotify-song" id="spotifySong">—</div>
+        <div class="spotify-artist" id="spotifyArtist">—</div>
+        <div class="spotify-progress-wrap">
+          <span class="spotify-time" id="spotifyTimeCur">0:00</span>
+          <div class="spotify-bar"><div class="spotify-bar-fill" id="spotifyFill"></div></div>
+          <span class="spotify-time end" id="spotifyTimeEnd">0:00</span>
+        </div>
+      </div>
+      <div class="spotify-eq">
+        <span></span><span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Music Player -->
+  <div class="player-wrap">
+    <div class="player">
+      <div class="player-header">
+        <div class="album-art" id="albumArt">
+          <div class="disc-anim paused" id="discAnim"></div>
+          <svg viewBox="0 0 24 24" fill="currentColor" style="position:relative;z-index:1">
+            <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
+          </svg>
+        </div>
+        <div class="track-info">
+          <div class="track-name" id="trackName">Chọn bài hát...</div>
+          <div class="track-artist" id="trackArtist">NemoSnow · Playlist</div>
+        </div>
+        <div class="eq" id="eqBars">
+          <div class="eq-bar paused"></div>
+          <div class="eq-bar paused"></div>
+          <div class="eq-bar paused"></div>
+          <div class="eq-bar paused"></div>
+          <div class="eq-bar paused"></div>
+        </div>
+      </div>
+
+      <div class="seek-wrap">
+        <span class="time" id="curTime">0:00</span>
+        <input class="seek" type="range" id="seekBar" min="0" max="100" value="0"/>
+        <span class="time end" id="totTime">0:00</span>
+      </div>
+
+      <div class="controls">
+        <button class="ctrl-btn" id="prevBtn" title="Trước">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
+        </button>
+        <button class="ctrl-btn play-btn" id="playBtn" title="Phát / Dừng">
+          <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="nextBtn" title="Tiếp theo">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2-8.14L11.03 12 8 14.14V9.86zM16 6h2v12h-2z"/></svg>
+        </button>
+        <button class="ctrl-btn" id="uploadBtn" title="Tải nhạc lên" style="margin-left:8px">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13v6H5v-6H3v6a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-6zM13 3.83l3.59 3.58L18 6l-6-6-6 6 1.41 1.41L11 3.83V16h2z"/></svg>
+        </button>
+        <input type="file" id="fileInput" accept="audio/*" style="display:none" multiple/>
+      </div>
+
+      <div class="volume-wrap">
+        <button class="vol-icon" id="muteBtn" title="Tắt / Bật tiếng">
+          <svg id="volIcon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+          </svg>
+        </button>
+        <input class="vol-slider" type="range" id="volBar" min="0" max="100" value="80"/>
+        <span class="vol-pct" id="volPct">80%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Playlist Manager -->
+  <div class="playlist-panel">
+    <div class="playlist-header" id="plToggle">
+      <div class="playlist-header-left">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h13v-2H3v2zm0-5h10v-2H3v2zm0-7v2h13V6H3zm18 9.59L17.42 12 21 8.41 19.59 7l-5 5 5 5L21 15.59z"/></svg>
+        Danh sách nhạc
+        <span class="playlist-count" id="plCount">0 bài</span>
+      </div>
+      <div class="playlist-chevron" id="plChevron">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+      </div>
+    </div>
+    <div class="playlist-body" id="plBody">
+      <div class="add-track-form">
+        <div class="add-track-row">
+          <input class="pl-input" type="text" id="plNameInput" placeholder="Tên bài hát (tuỳ chọn)"/>
+          <input class="pl-input" type="text" id="plUrlInput" placeholder="Dán link MP3 vào đây..."/>
+          <button class="pl-add-btn" id="plAddBtn">+ Thêm</button>
+        </div>
+      </div>
+      <div class="track-list" id="trackList"></div>
+    </div>
+  </div>
+
+  <div class="footer">© 2025 NemoSnow · Made with ❤</div>
+</div>
+
+<audio id="audio"></audio>
+
+<script>
+  // ══════════════════════════════════════════════
+  //  LANYARD — Discord Status + Spotify
+  // ══════════════════════════════════════════════
+  const DISCORD_ID = '1450140698119770264';
+
+  const statusBadge  = document.getElementById('statusBadge');
+  const avatarBadge  = document.getElementById('avatarBadge');
+  const statusText   = document.getElementById('statusText');
+  const customStatus = document.getElementById('customStatus');
+  const customEmoji  = document.getElementById('customEmoji');
+  const customText   = document.getElementById('customText');
+  const spotifyWrap  = document.getElementById('spotifyWrap');
+  const spotifySong  = document.getElementById('spotifySong');
+  const spotifyArtist= document.getElementById('spotifyArtist');
+  const spotifyArt   = document.getElementById('spotifyArt');
+  const spotifyFill  = document.getElementById('spotifyFill');
+  const spotifyTimeCur = document.getElementById('spotifyTimeCur');
+  const spotifyTimeEnd = document.getElementById('spotifyTimeEnd');
+
+  const STATUS_MAP = {
+    online:  { label: 'Online',        cls: 'online'  },
+    idle:    { label: 'Idle',          cls: 'idle'    },
+    dnd:     { label: 'Do Not Disturb',cls: 'dnd'     },
+    offline: { label: 'Offline',       cls: 'offline' },
+  };
+
+  function fmtMs(ms) {
+    const s = Math.floor(ms / 1000);
+    const m = Math.floor(s / 60);
+    return m + ':' + String(s % 60).padStart(2, '0');
+  }
+
+  let spotifyProgressTimer = null;
+  let spotifyStart = 0, spotifyEnd = 0;
+
+  function tickSpotify() {
+    const now = Date.now();
+    const elapsed = now - spotifyStart;
+    const total   = spotifyEnd - spotifyStart;
+    if (total <= 0) return;
+    const pct = Math.min((elapsed / total) * 100, 100);
+    spotifyFill.style.width = pct + '%';
+    spotifyTimeCur.textContent = fmtMs(elapsed);
+    spotifyTimeEnd.textContent = fmtMs(total);
+  }
+
+  function applyLanyard(data) {
+    // ── Status ──
+    const s = data.discord_status || 'offline';
+    const info = STATUS_MAP[s] || STATUS_MAP.offline;
+    ['online','idle','dnd','offline'].forEach(c => {
+      statusBadge.classList.remove(c);
+      avatarBadge.classList.remove(c);
+    });
+    statusBadge.classList.add(info.cls);
+    avatarBadge.classList.add(info.cls);
+    statusText.textContent = info.label;
+
+    // ── Custom status ──
+    const cs = (data.activities || []).find(a => a.type === 4);
+    if (cs && (cs.state || cs.emoji)) {
+      customEmoji.textContent = cs.emoji?.name || '';
+      customText.textContent  = cs.state || '';
+      customStatus.classList.add('show');
+    } else {
+      customStatus.classList.remove('show');
+    }
+
+    // ── Spotify ──
+    const sp = data.spotify;
+    if (sp) {
+      spotifyWrap.classList.add('show');
+      spotifySong.textContent   = sp.song   || '—';
+      spotifyArtist.textContent = sp.artist || '—';
+
+      // Album art
+      if (sp.album_art_url) {
+        spotifyArt.innerHTML = `<img src="${sp.album_art_url}" alt="album art"/>`;
+      } else {
+        spotifyArt.innerHTML = `<div class="spotify-art-placeholder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg></div>`;
+      }
+
+      // Progress
+      clearInterval(spotifyProgressTimer);
+      spotifyStart = sp.timestamps?.start || Date.now();
+      spotifyEnd   = sp.timestamps?.end   || Date.now();
+      tickSpotify();
+      spotifyProgressTimer = setInterval(tickSpotify, 1000);
+    } else {
+      spotifyWrap.classList.remove('show');
+      clearInterval(spotifyProgressTimer);
+    }
+  }
+
+  // ── WebSocket (realtime) ──
+  function connectLanyardWS() {
+    const ws = new WebSocket('wss://api.lanyard.rest/socket');
+    let heartbeatTimer = null;
+
+    ws.addEventListener('open', () => {
+      console.log('[Lanyard] WS connected');
+    });
+
+    ws.addEventListener('message', (evt) => {
+      const msg = JSON.parse(evt.data);
+
+      if (msg.op === 1) {
+        // Hello — send identify + start heartbeat
+        ws.send(JSON.stringify({ op: 2, d: { subscribe_to_id: DISCORD_ID } }));
+        heartbeatTimer = setInterval(() => {
+          ws.send(JSON.stringify({ op: 3 }));
+        }, msg.d.heartbeat_interval);
+      }
+
+      if (msg.op === 0) {
+        // Event
+        if (msg.t === 'INIT_STATE' || msg.t === 'PRESENCE_UPDATE') {
+          applyLanyard(msg.d);
+        }
+      }
+    });
+
+    ws.addEventListener('close', () => {
+      clearInterval(heartbeatTimer);
+      console.warn('[Lanyard] WS closed, reconnecting in 5s…');
+      setTimeout(connectLanyardWS, 5000);
+    });
+
+    ws.addEventListener('error', () => {
+      ws.close();
+    });
+  }
+
+  // ── Fallback: REST API (lần đầu tải nhanh) ──
+  fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`)
+    .then(r => r.json())
+    .then(json => {
+      if (json.success) applyLanyard(json.data);
+    })
+    .catch(() => {
+      statusText.textContent = 'Offline';
+      statusBadge.classList.remove('online','idle','dnd');
+      statusBadge.classList.add('offline');
+      avatarBadge.classList.add('offline');
+    });
+
+  // Start realtime WS
+  connectLanyardWS();
+
+
+  // ══════════════════════════════════════════════
+  //  MUSIC PLAYER
+  // ══════════════════════════════════════════════
+  const audio    = document.getElementById('audio');
+  const playBtn  = document.getElementById('playBtn');
+  const seekBar  = document.getElementById('seekBar');
+  const curTime  = document.getElementById('curTime');
+  const totTime  = document.getElementById('totTime');
+  const trackName   = document.getElementById('trackName');
+  const trackArtist = document.getElementById('trackArtist');
+  const discAnim = document.getElementById('discAnim');
+  const eqBars   = document.querySelectorAll('.eq-bar');
+  const fileInput= document.getElementById('fileInput');
+  const prevBtn  = document.getElementById('prevBtn');
+  const nextBtn  = document.getElementById('nextBtn');
+
+  let playlist = [
+    { name: "Hạt Mưa Vương Vấn", url: "https://cdn.discordapp.com/attachments/1468209685684555981/1484509479922831420/Hat_Mua_Vuong_Van_Haiyang_Remix_-_AIR_Cover_Hat_Mua_Vuong_Van_Em_Gio_Nay_ang_Noi_au_Remix.mp3?ex=69be7cb0&is=69bd2b30&hm=42d7b3e7c71f6256c122f75324da7f1048389060695711ca7e489da5cabe7a58&" },
+    { name: "Lo Người Ướt Áo", url: "https://cdn.discordapp.com/attachments/1468209685684555981/1484611503817752678/Lo_Nguoi_Uot_Ao_Remix_ong_x_Thazh_-_Nguyen_Thac_Bao_Ngoc_x_H2O_Sao_Thay_oi_Mi_Em_Buon_Remix.mp3?ex=69bedbb5&is=69bd8a35&hm=86d57b775af77f41ad5003098b75fa389ea87a083aa82c65ef05a7f4c26cacf6&" },
+    { name: "Trả Cho Anh", url: "https://cdn.discordapp.com/attachments/1468209685684555981/1484611930613092512/Tra_Cho_Anh_Huy_PT_Remix_-_Nguyen_Thac_Bao_Ngoc_Em_Tra_Cho_Anh_Tu_Do_Thang_Nam_Ta_Tung_Gan_Bo.mp3?ex=69bedc1b&is=69bd8a9b&hm=3337a8a68e5eb649ca185a5e1244d972177f43f3607409e2957751867a72e64a&" },
+    { name: "Anh Chẳng Thể", url: "https://cdn.discordapp.com/attachments/1468209685684555981/1484646976934117396/Anh_Chang_The_Thazh_x_ong_Remix__-_Pham_Ky_Vi_Anh_Chang_Muon_Thay_Em_Khoc_Remix_TikTok.mp3?ex=69befcbe&is=69bdab3e&hm=5178f180aea511050c901c786b495d6f9d6981a2f24ac9abf80f9076b5257240&" },
+  ];
+  let currentIdx = 0;
+  let isPlaying  = false;
+
+  const playIconSVG  = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>`;
+  const pauseIconSVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>`;
+
+  function fmt(s) {
+    const m = Math.floor(s / 60), sec = Math.floor(s % 60);
+    return m + ':' + String(sec).padStart(2,'0');
+  }
+
+  function setPlaying(state) {
+    isPlaying = state;
+    playBtn.innerHTML = state ? pauseIconSVG : playIconSVG;
+    discAnim.classList.toggle('paused', !state);
+    eqBars.forEach(b => b.classList.toggle('paused', !state));
+  }
+
+  function loadTrack(idx) {
+    if (!playlist.length) return;
+    currentIdx = (idx + playlist.length) % playlist.length;
+    const t = playlist[currentIdx];
+    audio.src = t.url;
+    trackName.textContent   = t.name;
+    trackArtist.textContent = 'Nam PC · Playlist (' + (currentIdx+1) + '/' + playlist.length + ')';
+    audio.play().then(() => setPlaying(true)).catch(()=>{});
+  }
+
+  playBtn.addEventListener('click', () => {
+    if (!playlist.length) { fileInput.click(); return; }
+    if (isPlaying) { audio.pause(); setPlaying(false); }
+    else { audio.play(); setPlaying(true); }
+  });
+
+  prevBtn.addEventListener('click', () => loadTrack(currentIdx - 1));
+  nextBtn.addEventListener('click', () => loadTrack(currentIdx + 1));
+  document.getElementById('uploadBtn').addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    playlist.forEach(t => URL.revokeObjectURL(t.url));
+    playlist = files.map(f => ({ name: f.name.replace(/\.[^.]+$/, ''), url: URL.createObjectURL(f) }));
+    loadTrack(0);
+  });
+
+  audio.addEventListener('timeupdate', () => {
+    if (!audio.duration) return;
+    const pct = (audio.currentTime / audio.duration) * 100;
+    seekBar.value = pct;
+    seekBar.style.background = `linear-gradient(90deg, var(--accent) ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
+    curTime.textContent = fmt(audio.currentTime);
+  });
+
+  audio.addEventListener('loadedmetadata', () => { totTime.textContent = fmt(audio.duration); });
+
+  seekBar.addEventListener('input', () => {
+    if (!audio.duration) return;
+    audio.currentTime = (seekBar.value / 100) * audio.duration;
+  });
+
+  audio.addEventListener('ended', () => {
+    if (playlist.length > 1) loadTrack(currentIdx + 1);
+    else setPlaying(false);
+  });
+
+  // Volume
+  const volBar  = document.getElementById('volBar');
+  const volPct  = document.getElementById('volPct');
+  const muteBtn = document.getElementById('muteBtn');
+  const volIcon = document.getElementById('volIcon');
+
+  const iconHigh = `<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>`;
+  const iconLow  = `<path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5z"/>`;
+  const iconMute = `<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>`;
+
+  let lastVol = 0.8;
+  audio.volume = 0.8;
+
+  function updateVolUI(val) {
+    const pct = Math.round(val * 100);
+    volBar.value = pct;
+    volPct.textContent = pct + '%';
+    volBar.style.background = `linear-gradient(90deg, var(--accent2) ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
+    if (val === 0)      volIcon.innerHTML = iconMute;
+    else if (val < 0.5) volIcon.innerHTML = iconLow;
+    else                volIcon.innerHTML = iconHigh;
+  }
+
+  volBar.addEventListener('input', () => {
+    const v = volBar.value / 100;
+    audio.volume = v;
+    if (v > 0) lastVol = v;
+    updateVolUI(v);
+  });
+
+  muteBtn.addEventListener('click', () => {
+    if (audio.volume > 0) { lastVol = audio.volume; audio.volume = 0; updateVolUI(0); }
+    else { audio.volume = lastVol || 0.8; updateVolUI(audio.volume); }
+  });
+
+  updateVolUI(0.8);
+
+  // Playlist Manager
+  const plToggle    = document.getElementById('plToggle');
+  const plBody      = document.getElementById('plBody');
+  const plChevron   = document.getElementById('plChevron');
+  const plNameInput = document.getElementById('plNameInput');
+  const plUrlInput  = document.getElementById('plUrlInput');
+  const plAddBtn    = document.getElementById('plAddBtn');
+  const trackList   = document.getElementById('trackList');
+  const plCount     = document.getElementById('plCount');
+
+  plToggle.addEventListener('click', () => {
+    plBody.classList.toggle('open');
+    plChevron.classList.toggle('open');
+  });
+
+  function updatePlCount() { plCount.textContent = playlist.length + ' bài'; }
+
+  function renderTrackList() {
+    trackList.innerHTML = '';
+    playlist.forEach((t, i) => {
+      const item = document.createElement('div');
+      item.className = 'track-item' + (i === currentIdx && isPlaying ? ' active' : '');
+      item.innerHTML = `
+        <span class="track-num">${i + 1}</span>
+        <span class="track-item-name">${t.name}</span>
+        <button class="track-del" data-idx="${i}" title="Xóa">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>`;
+      item.addEventListener('click', (e) => {
+        if (e.target.closest('.track-del')) return;
+        loadTrack(i); renderTrackList();
+      });
+      item.querySelector('.track-del').addEventListener('click', () => {
+        playlist.splice(i, 1);
+        if (currentIdx >= playlist.length) currentIdx = playlist.length - 1;
+        if (!playlist.length) {
+          audio.pause(); setPlaying(false); audio.src = '';
+          trackName.textContent = 'Chọn bài hát...';
+          trackArtist.textContent = 'Nam PC · Playlist';
+        }
+        updatePlCount(); renderTrackList();
+      });
+      trackList.appendChild(item);
+    });
+    updatePlCount();
+  }
+
+  plAddBtn.addEventListener('click', () => {
+    const url = plUrlInput.value.trim();
+    if (!url) { plUrlInput.focus(); return; }
+    const rawName = plNameInput.value.trim();
+    const name = rawName || url.split('/').pop().replace(/\.[^.]+$/, '') || 'Bài hát ' + (playlist.length + 1);
+    playlist.push({ name, url });
+    plNameInput.value = ''; plUrlInput.value = '';
+    renderTrackList();
+    if (playlist.length === 1) loadTrack(0);
+  });
+
+  plUrlInput.addEventListener('keydown', e => { if (e.key === 'Enter') plAddBtn.click(); });
+  plNameInput.addEventListener('keydown', e => { if (e.key === 'Enter') plUrlInput.focus(); });
+  audio.addEventListener('play',  () => renderTrackList());
+  audio.addEventListener('pause', () => renderTrackList());
+
+  if (playlist.length > 0) {
+    const t = playlist[0];
+    audio.src = t.url;
+    trackName.textContent   = t.name;
+    trackArtist.textContent = 'Nam PC · Playlist (1/' + playlist.length + ')';
+    renderTrackList();
+  }
+</script>
+</body>
+</html>
